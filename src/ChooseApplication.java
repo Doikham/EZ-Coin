@@ -41,7 +41,7 @@ public class ChooseApplication extends  JFrame implements PropertyChangeListener
             public void actionPerformed(ActionEvent e) {
                 Thread gameThread = new Thread() {
                     public void run() {
-                        ThatApplication game = new ThatApplication(0, "Resources/bg_muic.jpg", "Resources/rm theme.wav");
+                        ThatApplication game = new ThatApplication(0, "Resources/bg2.jpg", "Resources/rm theme.wav");
                     }
                 };
                 gameThread.start();
@@ -61,7 +61,7 @@ public class ChooseApplication extends  JFrame implements PropertyChangeListener
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
                 SettingApplication option = new SettingApplication();
-                //option.setVisible(true);
+                option.setVisible(true);
                 themeSoundChoose.stop();
                 dispose();
             }
