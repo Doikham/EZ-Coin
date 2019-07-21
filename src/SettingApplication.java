@@ -133,7 +133,7 @@ public class SettingApplication extends JFrame {
                         showPreview.setIcon(preview);
                         break;
                     case 1:
-                        bg = "Resources/bg_muic.jpg";
+                        bg = "Resources/muic.jpg";
                         preview = new MyImageIcon(bg).resize(previewW, previewH);
                         showPreview.setIcon(preview);
                         break;
