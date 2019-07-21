@@ -21,7 +21,8 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
     private boolean hit, laserHit = false;
     private ArrayList <Comet> comets = new ArrayList<>();
     private ArrayList <Laser> lasers = new ArrayList<>();
-
+    private int count = 0;
+    private boolean holding;
 
     public ThatApplication(int level, String backgroundImg, String themeSound)
     {
@@ -276,16 +277,14 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
     }
 
     @Override
-    public void mousePressed(MouseEvent me) {
+    public void mousePressed(MouseEvent me) {                    
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
         laserSound.playOnce();
         createLaser();
-        repaint();
-//        try { Thread.sleep(1000-level*100); } 
-//        catch (InterruptedException e) { e.printStackTrace(); }
+        repaint();      
     }
 
     @Override
