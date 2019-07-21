@@ -16,7 +16,7 @@ public class SettingApplication extends JFrame {
     private String levelString[] =  {"Baby","Teen","Adult","Master","God"};
     private int level = 0;
     private JComboBox               backgroundBox;
-    private String bgString[] =     {"Deep Space","Mahidol University International College","on Earth","Rick and Morty","Atmosphere"};
+    private String bgString[] =     {"Deep Space","MUIC","on Earth","Rick and Morty","Atmosphere"};
     private String bg =             "Resources/bg2.jpg";
     private JList                   soundList;
     private String soundString[] =  {"Rick and Morty Theme","Munidya - Panjabi MC","Star Wars Theme","Tequila","งัดถั่งงัด","เต่างอย"};
@@ -52,13 +52,14 @@ public class SettingApplication extends JFrame {
         
         themeSound = new MySoundEffect("Resources/rm theme.wav");
         themeSound.playLoop();
-        backgroundSetting = new MyImageIcon("Resources/bg2.jpg").resize(contentpane.getWidth(), contentpane.getHeight());
+        backgroundSetting = new MyImageIcon("Resources/bg_rm.png").resize(contentpane.getWidth(), contentpane.getHeight());
         drawpane = new JLabel();
         drawpane.setIcon(backgroundSetting);
         
         //Level Label
         levelLabel = new JLabel("Select difficulty: ");
         levelLabel.setBounds(2, 0, 300, 100);
+        levelLabel.setFont(new Font(levelLabel.getFont().getName(), levelLabel.getFont().getStyle(), 15));
         levelLabel.setVisible(true);
         levelLabel.setForeground(Color.WHITE);
         contentpane.add(levelLabel);
@@ -70,6 +71,7 @@ public class SettingApplication extends JFrame {
             Button[i] = new JRadioButton(levelString[i]);
             Radio.add(Button[i]);
             Button[i].setBounds(150 + (100 * i), 20 , 100, 50);
+            Button[i].setFont(levelLabel.getFont());
             contentpane.add(Button[i]);                        
         }
         Button[0].setSelected(true);
@@ -101,15 +103,17 @@ public class SettingApplication extends JFrame {
         
         //Background Label
         backgroundLabel = new JLabel("Select location:");
-        backgroundLabel.setBounds(2, 100, 330, 60);
+        backgroundLabel.setBounds(2, 300, 330, 60);
         backgroundLabel.setVisible(true);
         backgroundLabel.setForeground(Color.WHITE);
+        backgroundLabel.setFont(levelLabel.getFont());
         contentpane.add(backgroundLabel);
         
         //Background Combobox
         backgroundBox = new JComboBox(bgString);
-        backgroundBox.setBounds(150, 100, 225, 45);
+        backgroundBox.setBounds(150, 300, 225, 45);
         backgroundBox.setVisible(true);
+        backgroundBox.setFont(levelLabel.getFont());
         contentpane.add(backgroundBox);
         backgroundBox.setSelectedIndex(0);
         backgroundBox.addItemListener(new ItemListener() {
@@ -141,15 +145,17 @@ public class SettingApplication extends JFrame {
         
         //Sound Label
         soundLabel = new JLabel("Select song:");
-        soundLabel.setBounds(2,200,140,30);
+        soundLabel.setBounds(2,100,140,30);
         soundLabel.setVisible(true);
         soundLabel.setForeground(Color.WHITE);
+        soundLabel.setFont(levelLabel.getFont());
         contentpane.add(soundLabel);
         
         //Sound List
         JList soundList = new JList(soundString);
         soundList.setVisibleRowCount(5);
-        soundList.setBounds(150, 200, 140, 155);
+        soundList.setBounds(150, 100, 200, 155);
+        soundList.setFont(levelLabel.getFont());
         contentpane.add(soundList);
         soundList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         soundList.setSelectedIndex(0);
@@ -202,8 +208,10 @@ public class SettingApplication extends JFrame {
         });
         
         startButton = new JButton("Start");
-        startButton.setBounds(100, 480, 200, 100);
+        startButton.setBounds(1100, 150, 200, 100);
         startButton.setVisible(true);
+        startButton.setBackground(Color.orange);
+        startButton.setFont(new Font(startButton.getFont().getName(), startButton.getFont().getStyle(), 30));
         contentpane.add(startButton);
         startButton.addActionListener(new ActionListener() {       
             @Override
@@ -213,8 +221,10 @@ public class SettingApplication extends JFrame {
         });
         
         exitButton = new JButton("Exit");
-        exitButton.setBounds(100, 630, 200, 100);
+        exitButton.setBounds(1100, 300, 200, 100);
         exitButton.setVisible(true);
+        exitButton.setBackground(Color.orange);
+        exitButton.setFont(new Font(exitButton.getFont().getName(), exitButton.getFont().getStyle(), 30));
         contentpane.add(exitButton);
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
