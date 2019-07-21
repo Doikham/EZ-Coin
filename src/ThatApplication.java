@@ -121,7 +121,7 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
                     try { Thread.sleep(speed); } 
                     catch (InterruptedException e) { e.printStackTrace(); }
                 }
-                comets.remove(size);
+                //comets.remove(size);
                 contentpane.remove(comet);
                 repaint();
             }
