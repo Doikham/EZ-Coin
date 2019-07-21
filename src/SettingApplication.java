@@ -5,6 +5,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.Visibility;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -12,7 +13,7 @@ import javax.swing.event.ListSelectionListener;
 public class SettingApplication extends JFrame {
     
     private JPanel                  contentpane;
-    private JLabel                  drawpane, levelLabel, backgroundLabel, soundLabel, big, ney, hon, by;
+    private JLabel                  drawpane, levelLabel, backgroundLabel, soundLabel, big, ney, hon, by, showPreview;
     private String levelString[] =  {"Baby","Teen","Adult","Master","God"};
     private int level = 0;
     private JComboBox               backgroundBox;
@@ -23,7 +24,7 @@ public class SettingApplication extends JFrame {
     private String sound =          "Resource/rm theme.wav";
     private MySoundEffect           themeSound;
     private JButton                 startButton, exitButton;
-    private MyImageIcon             backgroundSetting;
+    private MyImageIcon             backgroundSetting, preview;
     
     public SettingApplication(){
         CreatePage();
@@ -108,6 +109,13 @@ public class SettingApplication extends JFrame {
         backgroundLabel.setForeground(Color.WHITE);
         backgroundLabel.setFont(levelLabel.getFont());
         contentpane.add(backgroundLabel);
+
+        //Background Image
+        int previewW = 400, previewH = 325;
+        preview = new MyImageIcon("Resources/bg2.jpg");
+        showPreview = new JLabel(preview.resize(previewW, previewH));
+        showPreview.setBounds(50, 400, previewW, previewH);
+        contentpane.add(showPreview);
         
         //Background Combobox
         backgroundBox = new JComboBox(bgString);
@@ -121,20 +129,28 @@ public class SettingApplication extends JFrame {
                 switch (backgroundBox.getSelectedIndex()) {
                     case 0:
                         bg = "Resources/bg2.jpg";
-//                        bgIcon = new MyImageIcon("bg1.png").resize(bgimgsizeW, bgimgsizeH);
-//                        DisplayBgIcon.setIcon(bgIcon);
+                        preview = new MyImageIcon(bg).resize(previewW, previewH);
+                        showPreview.setIcon(preview);
                         break;
                     case 1:
-                        bg = "Resources/bg_muic.jpg";                       
+                        bg = "Resources/bg_muic.jpg";
+                        preview = new MyImageIcon(bg).resize(previewW, previewH);
+                        showPreview.setIcon(preview);
                         break;
                     case 2:
                         bg = "Resources/bg_earth.jpg";
+                        preview = new MyImageIcon(bg).resize(previewW, previewH);
+                        showPreview.setIcon(preview);
                         break;
                     case 3:
                         bg = "Resources/bg_rick.jpg";
+                        preview = new MyImageIcon(bg).resize(previewW, previewH);
+                        showPreview.setIcon(preview);
                         break;
                     case 4:
-                        bg = "Resources/bg_rm.jpg";
+                        bg = "Resources/bg_rm.png";
+                        preview = new MyImageIcon(bg).resize(previewW, previewH);
+                        showPreview.setIcon(preview);
                         break;                  
                     default: {
                     }
@@ -229,6 +245,9 @@ public class SettingApplication extends JFrame {
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(null, "Good Bye", "That's it", JOptionPane.INFORMATION_MESSAGE);
+                themeSound.stop();
+                setVisible(false);
+                System.exit(-1);
             }
         });
 
