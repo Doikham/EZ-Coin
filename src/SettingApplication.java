@@ -18,7 +18,7 @@ public class SettingApplication extends JFrame {
     private String bgString[] =     {"Deep Space","Mahidol University International College","on Earth","Rick and Morty","Atmosphere"};
     private String bg =             "Resources/bg2.jpg";
     private JList                   soundList;
-    private String soundString[] =  {"RM","Panjabi MC","Star Wars","Tequila","งัดถั่งงัด"};
+    private String soundString[] =  {"Rick and Morty Theme","Munidya - Panjabi MC","Star Wars Theme","Tequila","งัดถั่งงัด"};
     private String sound =          "Resource/rm theme.wav";
     private MySoundEffect           themeSound;
     private JButton                 startButton, exitButton;
