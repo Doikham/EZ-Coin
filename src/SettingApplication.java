@@ -13,7 +13,7 @@ import javax.swing.event.ListSelectionListener;
 public class SettingApplication extends JFrame {
     
     private JPanel                  contentpane;
-    private JLabel                  drawpane, levelLabel, backgroundLabel, soundLabel, big, ney, hon, by, showPreview;
+    private JLabel                  drawpane, levelLabel, backgroundLabel, soundLabel, big, ney, hon,jack, by, showPreview;
     private String levelString[] =  {"Baby","Teen","Adult","Master","God"};
     private int level = 0;
     private JComboBox               backgroundBox;
@@ -244,38 +244,44 @@ public class SettingApplication extends JFrame {
         contentpane.add(exitButton);
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Good Bye", "That's it", JOptionPane.INFORMATION_MESSAGE);
                 themeSound.stop();
+                JOptionPane.showMessageDialog(null, "Good Bye", "That's it", JOptionPane.INFORMATION_MESSAGE);
                 setVisible(false);
                 System.exit(-1);
             }
         });
 
         by = new JLabel("Made by:");
-        by.setBounds(1100,490,300,100);
+        by.setBounds(1100,390,300,100);
         by.setFont(new Font(by.getFont().getName(), by.getFont().getStyle(), 40));
         by.setForeground(Color.orange);
 
 
         big = new JLabel("Sethawit Suwincharat 5980027");
-        big.setBounds(1100,550,300,100);
+        big.setBounds(1100,450,300,100);
         big.setFont(new Font(big.getFont().getName(), big.getFont().getStyle(), 20));
         big.setForeground(Color.white);
 
         ney = new JLabel("Neramit Singh 5980394");
-        ney.setBounds(1100,600,300,100);
+        ney.setBounds(1100,500,300,100);
         ney.setFont(new Font(ney.getFont().getName(), ney.getFont().getStyle(), 20));
         ney.setForeground(Color.white);
 
         hon = new JLabel("Poomdanai Dechawaleekul 6080036");
-        hon.setBounds(1100,650,400,100);
+        hon.setBounds(1100,550,400,100);
         hon.setFont(new Font(hon.getFont().getName(), hon.getFont().getStyle(), 20));
         hon.setForeground(Color.white);
+
+        jack = new JLabel("Prapakorn Kangwannarakul 6080684");
+        jack.setBounds(1100,600,400,100);
+        jack.setFont(new Font(jack.getFont().getName(), jack.getFont().getStyle(), 20));
+        jack.setForeground(Color.white);
 
         contentpane.add(by);
         contentpane.add(big);
         contentpane.add(ney);
         contentpane.add(hon);
+        contentpane.add(jack);
         contentpane.add(drawpane);
         repaint();
         validate();
