@@ -5,7 +5,7 @@ import java.awt.event.*;
 public class MainApplication extends JFrame {
 
     private JPanel              contentpane;
-    private JLabel              drawpane, logoLabel;
+    private JLabel              drawpane, logoLabel, nameLabel, appLabel;
     private MyImageIcon         backgroundImg, logo;
     private JButton             startButton;
     private JTextField          textView;
@@ -41,12 +41,23 @@ public class MainApplication extends JFrame {
         backgroundImg = new MyImageIcon("Resources/bg2.jpg").resize(contentpane.getWidth(), contentpane.getHeight());
         drawpane = new JLabel();
         drawpane.setIcon(backgroundImg);
-        logo = new MyImageIcon("Resources/coin.png").resize(150, 200);
+        logo = new MyImageIcon("Resources/coin.png").resize(275, 220);
         logoLabel = new JLabel();//.resize(contentpane.getWidth(), contentpane.getHeight()));
         logoLabel.setIcon(logo);
+        logoLabel.setBounds(600,100,1100,400);
+
+        appLabel = new JLabel("EZ Coin Collector");
+        appLabel.setBounds(550,10,700,100);
+        appLabel.setFont(new Font(appLabel.getFont().getName(), appLabel.getFont().getStyle(), 50));
+        appLabel.setForeground(Color.orange);
+
+        nameLabel = new JLabel("Name:");
+        nameLabel.setBounds(250,515,300,100);
+        nameLabel.setFont(new Font(nameLabel.getFont().getName(), nameLabel.getFont().getStyle(), 50));
+        nameLabel.setForeground(Color.orange);
 
         textView = new JTextField(30);
-        textView.setBounds(250, 525, 350, 70);
+        textView.setBounds(450, 525, 350, 70);
         textView.setFont(new Font("Sans serif", Font.PLAIN, 20));
         textView.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent evt) {
@@ -55,8 +66,8 @@ public class MainApplication extends JFrame {
 
         });
 
-        startButton = new JButton("Press Here");
-        startButton.setBounds(655, 525, 250, 70);
+        startButton = new JButton("Next");
+        startButton.setBounds(850, 525, 250, 70);
         startButton.setFont(new Font("Sans serif", Font.PLAIN, 20));
         startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -64,14 +75,17 @@ public class MainApplication extends JFrame {
             }
 
             private void startButtonActionPerformed(ActionEvent evt) {
+                themeSoundMain.stop();
                 ChooseApplication frame2 = new ChooseApplication();
                 addPropertyChangeListener(frame2);
                 frame2.setVisible(true);
-                firePropertyChange("startButtonActionPerformed", "", textView.getText());
                 setVisible(false);
-                themeSoundMain.stop();
+                firePropertyChange("startButtonActionPerformed", "", textView.getText());
+
             }
         });
+        contentpane.add(appLabel);
+        contentpane.add(nameLabel);
         contentpane.add(logoLabel);
         contentpane.add(textView);
         contentpane.add(startButton);

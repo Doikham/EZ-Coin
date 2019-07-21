@@ -15,7 +15,7 @@ public class SettingApplication extends JFrame {
     private String levelString[] =  {"Baby","Teen","Adult","Master","God"};
     private int level = 0;
     private JComboBox               backgroundBox;
-    private String bgString[] =     {"BG2","MUIC","Earth","Rick","RM"};
+    private String bgString[] =     {"Deep Space","Mahidol University International College","on Earth","Rick and Morty","Atmosphere"};
     private String bg =             "Resources/bg2.jpg";
     private JList                   soundList;
     private String soundString[] =  {"RM","Panjabi MC","Star Wars","Tequila","งัดถั่งงัด"};

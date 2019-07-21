@@ -8,8 +8,8 @@ public class ChooseApplication extends  JFrame implements PropertyChangeListener
 
     private JButton             startBtn, settingBtn;
     private JPanel              contentpane;
-    private JLabel              drawpane, username;
-    private MyImageIcon         backgroundImg;
+    private JLabel              drawpane, username, appLabel, logoLabel;
+    private MyImageIcon         backgroundImg, logo;
     private MySoundEffectChoose themeSoundChoose;
 
     public ChooseApplication(){
@@ -33,9 +33,19 @@ public class ChooseApplication extends  JFrame implements PropertyChangeListener
         backgroundImg = new MyImageIcon("Resources/bg2.jpg").resize(contentpane.getWidth(), contentpane.getHeight());
         drawpane = new JLabel();
         drawpane.setIcon(backgroundImg);
+
+        logo = new MyImageIcon("Resources/coin.png").resize(275, 220);
+        logoLabel = new JLabel();//.resize(contentpane.getWidth(), contentpane.getHeight()));
+        logoLabel.setIcon(logo);
+        logoLabel.setBounds(600,100,1100,400);
+
+        appLabel = new JLabel("EZ Coin Collector");
+        appLabel.setBounds(550,10,700,100);
+        appLabel.setFont(new Font(appLabel.getFont().getName(), appLabel.getFont().getStyle(), 50));
+        appLabel.setForeground(Color.orange);
         
         startBtn = new JButton("Start");
-        startBtn.setBounds(250, 525, 350, 70);
+        startBtn.setBounds(350, 535, 350, 70);
         startBtn.setFont(new Font("Arial", Font.PLAIN, 40));
         startBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -52,7 +62,7 @@ public class ChooseApplication extends  JFrame implements PropertyChangeListener
         });
 
         settingBtn = new JButton("Option");
-        settingBtn.setBounds(630, 525, 350, 70);
+        settingBtn.setBounds(730, 535, 350, 70);
 
         //option_button.setLocation(350,350);
         //option_button.setPreferredSize(new Dimension(250,100));
@@ -70,6 +80,8 @@ public class ChooseApplication extends  JFrame implements PropertyChangeListener
         username.setBounds(150, 60, 500, 300);
 
         contentpane.add(username);
+        contentpane.add(appLabel);
+        contentpane.add(logoLabel);
         contentpane.add(startBtn);
         contentpane.add(settingBtn);
         contentpane.add(drawpane);
@@ -83,7 +95,7 @@ public class ChooseApplication extends  JFrame implements PropertyChangeListener
             this.username.setText("Welcome " + event.getNewValue() + "!");
             username.setFont(new Font(username.getFont().getName(), username.getFont().getStyle(), 50));
             username.setForeground(Color.orange);
-            username.setBounds(400, 0, 1200, 900);
+            username.setBounds(500, 15, 1200, 900);
         }
     }
 
