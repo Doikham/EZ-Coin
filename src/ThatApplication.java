@@ -4,24 +4,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class ThatApplication extends JFrame implements KeyListener{
-    private JLabel              contentpane;
-    private MyLabel             JetpackLabel;
-    private JButton             startButton, closeButton, highscoreButton;
-    private JTextField          coinText;
+public class ThatApplication extends JFrame implements KeyListener, MouseListener{
+    private JLabel                  contentpane;
+    private MyLabel                 JetpackLabel;
+    private JButton                 startButton, closeButton, highscoreButton;
+    private JTextField              coinText;
     private int coin;
-    private MySoundEffect       themeSoundThat;
-    private boolean gameRun =   true;
-    private boolean hit = false;
+    private MySoundEffect           themeSoundThat;
+    private boolean gameRun =       true;
+    private boolean hit, laserHit = false;
 
     public ThatApplication(int level, String backgroundImg, String themeSound)
     {
         AddComponents(backgroundImg, themeSound);
         //setCoinThread();
         addKeyListener(this);
+        addMouseListener(this);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -37,6 +40,7 @@ public class ThatApplication extends JFrame implements KeyListener{
             repaint();
             try { Thread.sleep(1000-level*100); } 
             catch (InterruptedException e) { e.printStackTrace(); }
+            repaint();
         }
         themeSoundThat.stop();
     }
@@ -52,8 +56,8 @@ public class ThatApplication extends JFrame implements KeyListener{
         
         setContentPane(contentpane = new JLabel());
         
-//        JOptionPane.showMessageDialog(new JFrame(), "Let's start!" , "Hello!",
-//                JOptionPane.INFORMATION_MESSAGE );
+        JOptionPane.showMessageDialog(new JFrame(), "Hold and release the mouse to use laser!" , "Hello!",
+                JOptionPane.INFORMATION_MESSAGE );
         
         themeSoundThat = new MySoundEffect(themeSound);
         themeSoundThat.playLoop();
@@ -149,6 +153,30 @@ public class ThatApplication extends JFrame implements KeyListener{
         };
         coinThread.start();
     }
+    
+    public void createLaser(){
+        Thread laserThread = new Thread() {
+            public void run()
+            {
+                int speed = 50;                       
+                Laser laser = new Laser(JetpackLabel.curX, JetpackLabel.curY);
+                contentpane.add(laser);
+                repaint();
+                boolean done = false;
+                while (!done && gameRun) { 
+                    laser.updateLocation();
+                    //laserCollision(laser,cometLabel);
+                    if(laser.getCurX() > 1300) done = true;
+                    try { Thread.sleep(speed); } 
+                    catch (InterruptedException e) { e.printStackTrace(); }
+                }
+                contentpane.remove(laser);
+                laserHit = false;
+                repaint();
+            }
+        };
+        laserThread.start();
+    }
 
     @Override
     public void keyTyped(KeyEvent ke) {
@@ -186,6 +214,7 @@ public class ThatApplication extends JFrame implements KeyListener{
             contentpane.remove(JetpackLabel);
             JOptionPane.showMessageDialog( new JFrame(), "Unfortunately, we will miss you! Your have collected " + coin + " coin", "Chicken Dinner", JOptionPane.INFORMATION_MESSAGE );                         
             setVisible(false);
+            System.exit(-1);
         }
     }
     
@@ -198,6 +227,38 @@ public class ThatApplication extends JFrame implements KeyListener{
             coinText.setText(Integer.toString(coin));
             hit = true;
         }
+    }
+    
+//    synchronized public void laserCollision(Laser obs)
+//    {
+//	if ( !laserHit && comet.getBounds().intersects(obs.getBounds()) )
+//        {                    
+//            laserHit = true;
+//        }
+//    }
+
+    @Override
+    public void mouseClicked(MouseEvent me) {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent me) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent me) {
+        createLaser();
+        repaint();
+//        try { Thread.sleep(1000-level*100); } 
+//        catch (InterruptedException e) { e.printStackTrace(); }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent me) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent me) {
     }
 }
 
@@ -219,16 +280,16 @@ class MyLabel extends myJLabel
     synchronized public void updateLocation(int a) {
         switch(a) {
             case 0: if (curY > 0)  
-                        curY -= 10;  
+                        curY -= 20;  
                     break;
             case 1: if (curY < 750-height) 
-                        curY += 10; 
+                        curY += 20; 
                     break;
             case 2: if (curX > 0) 
-                        curX -= 10;
+                        curX -= 20;
                     break;
             case 3: if (curX < 1300-width) 
-                        curX += 10;
+                        curX += 20;
                     break;
         }
         setLocation(curX, curY);
@@ -287,6 +348,27 @@ class Coin extends myJLabel {
     }
 }
 
+class Laser extends myJLabel {
+    
+    private MyImageIcon laserLabel;
+    
+    public Laser(int x, int y) {
+        super();
+        width = 150; height = 100;
+        curY = y;      
+        laserLabel = new MyImageIcon("Resources/laser.png").resize(width, height);
+        curX = x;
+        setIcon(laserLabel);
+        //setHorizontalAlignment(JLabel.CENTER);
+        setBounds(curX, curY, width, height);
+    }
+    
+    public void updateLocation() {       
+        curX += 20;    
+        setLocation(curX, curY);
+    }
+}
+        
 class MyImageIcon extends ImageIcon
 {
     public MyImageIcon(String fname)  { super(fname); }
