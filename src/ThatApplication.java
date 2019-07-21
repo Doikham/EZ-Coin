@@ -23,6 +23,7 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
     private ArrayList <Laser> lasers = new ArrayList<>();
     private int count = 0;
     private boolean holding;
+    private MyImageIcon             explosionImg;
 
     public ThatApplication(int level, String backgroundImg, String themeSound)
     {
@@ -75,6 +76,8 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
         contentpane.setIcon(background.resize(1500,800));
         contentpane.setLayout(null);
 
+        explosionImg = new MyImageIcon("Resources/explosion.png");
+        
         JetpackLabel = new MyLabel();
         contentpane.add(JetpackLabel);
         
@@ -260,6 +263,7 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
 	if ( comet.getBounds().intersects(obs.getBounds()) )
         {
             explosionSound.playOnce();
+            comet.setIcon(explosionImg);
             contentpane.remove(comet);
             comets.remove(a);
             contentpane.remove(obs);
