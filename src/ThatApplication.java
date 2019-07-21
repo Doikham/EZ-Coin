@@ -16,7 +16,7 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
     private JButton                 startButton, closeButton, highscoreButton;
     private JTextField              coinText;
     private int coin;
-    private MySoundEffect           themeSoundThat;
+    private MySoundEffect           themeSoundThat, coinCollect, laserSound, explosionSound;
     private boolean gameRun =       true;
     private boolean hit, laserHit = false;
     private ArrayList <Comet> comets = new ArrayList<>();
@@ -64,6 +64,10 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
         
         themeSoundThat = new MySoundEffect(themeSound);
         themeSoundThat.playLoop();
+        
+        coinCollect = new MySoundEffect("Resources/coin.wav");
+        laserSound = new MySoundEffect("Resources/ironman.wav");
+        explosionSound = new MySoundEffect("Resources/explosion.wav");
        
         MyImageIcon background = new MyImageIcon(backgroundImg);
         contentpane.setIcon(background.resize(1500,800));
@@ -179,7 +183,7 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
                     try { Thread.sleep(speed); } 
                     catch (InterruptedException e) { e.printStackTrace(); }
                 }
-                lasers.remove(0);
+                lasers.remove(0);               
                 contentpane.remove(laser);
                 laserHit = false;
                 repaint();
@@ -232,6 +236,7 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
     {
 	if ( !hit && JetpackLabel.getBounds().intersects(obs.getBounds()) )
         {           
+            coinCollect.playOnce();
             contentpane.remove(obs);   
             coin++;
             coinText.setText(Integer.toString(coin));
@@ -243,7 +248,9 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
     {
 	if ( !laserHit && comet.getBounds().intersects(obs.getBounds()) )
         {
-            JOptionPane.showMessageDialog( new JFrame(), "HITTTTTTT", "Hit", JOptionPane.INFORMATION_MESSAGE );
+            explosionSound.playOnce();
+            contentpane.remove(comet);
+            contentpane.remove(obs);
             laserHit = true;
         }
     }
@@ -258,6 +265,7 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
 
     @Override
     public void mouseReleased(MouseEvent me) {
+        laserSound.playOnce();
         createLaser();
         repaint();
 //        try { Thread.sleep(1000-level*100); } 
