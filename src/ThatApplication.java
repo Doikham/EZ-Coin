@@ -55,14 +55,11 @@ public class ThatApplication extends JFrame implements KeyListener{
         JOptionPane.showMessageDialog(new JFrame(), "Let's start!" , "Hello!",
                 JOptionPane.INFORMATION_MESSAGE );
         
-        MyImageIcon backgroundImg = new MyImageIcon("Resources/jetpack/bg2.jpg").resize((int)width, (int)height);
+        MyImageIcon backgroundImg = new MyImageIcon("Resources/jetpack/bg2.jpg").resize(contentpane.getWidth(), contentpane.getHeight());
 
         drawpane = new JLabel();
         drawpane.setIcon(backgroundImg);
         drawpane.setLayout(null);
-
-        shareInt send = new shareInt();
-        send.shareDouble(width,height);
 
         JetpackLabel = new MyLabel();
         drawpane.add(JetpackLabel);
