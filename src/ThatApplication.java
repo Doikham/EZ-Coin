@@ -13,8 +13,9 @@ public class ThatApplication extends JFrame implements KeyListener{
     private JButton             startButton, closeButton, highscoreButton;
     private JTextField          coinText;
     private int coin;
-    private MySoundEffect       themeSound;
+    private MySoundEffect       themeSoundThat;
     private boolean gameRun =   true;
+    private boolean hit = false;
 
     public ThatApplication(int level, String backgroundImg, String themeSound)
     {
@@ -22,18 +23,22 @@ public class ThatApplication extends JFrame implements KeyListener{
         //setCoinThread();
         addKeyListener(this);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
-                //themeSound.stop();
+                themeSoundThat.stop();
             }
         });
         while(gameRun) {
-            setComet(level);
+            createComet(level);
             repaint();
-            try { Thread.sleep((100)); } 
+            try { Thread.sleep(1000-level*100); } 
+            catch (InterruptedException e) { e.printStackTrace(); }
+            createCoin(level);
+            repaint();
+            try { Thread.sleep(1000-level*100); } 
             catch (InterruptedException e) { e.printStackTrace(); }
         }
-        setVisible(false);
-        //themeSound.stop();
+        themeSoundThat.stop();
     }
 
     public void AddComponents(String backgroundImg, String themeSound)
@@ -42,16 +47,16 @@ public class ThatApplication extends JFrame implements KeyListener{
         setBounds(100, 100, 1300, 750);
         setResizable(false);
         setVisible(true);
-        setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
-        
+        setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );        
         coin = 0;
         
         setContentPane(contentpane = new JLabel());
         
-        JOptionPane.showMessageDialog(new JFrame(), "Let's start!" , "Hello!",
-                JOptionPane.INFORMATION_MESSAGE );
+//        JOptionPane.showMessageDialog(new JFrame(), "Let's start!" , "Hello!",
+//                JOptionPane.INFORMATION_MESSAGE );
         
-        //themeSound = new MySOundEffect
+        themeSoundThat = new MySoundEffect(themeSound);
+        themeSoundThat.playLoop();
        
         MyImageIcon background = new MyImageIcon(backgroundImg);
         contentpane.setIcon(background.resize(1500,800));
@@ -61,7 +66,7 @@ public class ThatApplication extends JFrame implements KeyListener{
         contentpane.add(JetpackLabel);
         
         JPanel control  = new JPanel();
-        control.setBounds(1350,0,150,30);
+        control.setBounds(1150,0,150,30);
         coinText = new JTextField("0", 5);		
 	coinText.setEditable(false);
         control.add(new JLabel("Coin : "));
@@ -69,36 +74,37 @@ public class ThatApplication extends JFrame implements KeyListener{
                 
         contentpane.add(control, BorderLayout.NORTH);
         
-        repaint();
+        //repaint();
         validate();
     }
 
-    public void setComet(int level){
+    public void createComet(int level){
         Thread cometThread = new Thread() {
+            @Override
             public void run()
             {
-                int hard = 50;
+                int speed = 50;
                 switch(level){
-                    case 0: hard = 50; 
+                    case 0: speed = 100; 
                     break;
-                    case 1: hard = 80; 
+                    case 1: speed = 80; 
                     break;
-                    case 2: hard = 10; 
+                    case 2: speed = 60; 
                     break;
-                    case 3: hard = 120; 
+                    case 3: speed = 35; 
                     break;
-                    case 4: hard = 150; 
+                    case 4: speed = 15; 
                     break;
-                }
+                }                
                 Comet comet = new Comet(level);
                 contentpane.add(comet);
                 repaint();
                 boolean done = false;
                 while (!done && gameRun) { 
                     comet.updateLocation();
-                    //collision(comet);
-                    if(comet.getCurX() < -comet.getWidth() || comet.getCurX() > 1200) done = true;
-                    try { Thread.sleep(hard); } 
+                    cometCollision(comet);
+                    if(comet.getCurX() < 0) done = true;
+                    try { Thread.sleep(speed); } 
                     catch (InterruptedException e) { e.printStackTrace(); }
                 }
                 contentpane.remove(comet);
@@ -107,15 +113,50 @@ public class ThatApplication extends JFrame implements KeyListener{
         };
         cometThread.start();
     }
+    
+    public void createCoin(int level){
+        Thread coinThread = new Thread() {
+            public void run()
+            {
+                int speed = 50;
+                switch(level){
+                    case 0: speed = 100; 
+                    break;
+                    case 1: speed = 80; 
+                    break;
+                    case 2: speed = 60; 
+                    break;
+                    case 3: speed = 35; 
+                    break;
+                    case 4: speed = 15; 
+                    break;
+                }                
+                Coin coin = new Coin(level);
+                contentpane.add(coin);
+                repaint();
+                boolean done = false;
+                while (!done && gameRun) { 
+                    coin.updateLocation();
+                    coinCollision(coin);
+                    if(coin.getCurX() < 0) done = true;
+                    try { Thread.sleep(speed); } 
+                    catch (InterruptedException e) { e.printStackTrace(); }
+                }
+                contentpane.remove(coin);
+                hit = false;
+                repaint();
+            }
+        };
+        coinThread.start();
+    }
 
     @Override
     public void keyTyped(KeyEvent ke) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void keyPressed(KeyEvent ke) {
-        switch (ke.getKeyCode()) {  //main character, call MyToggleLabel.updateLocation();           
+        switch (ke.getKeyCode()) {            
             case KeyEvent.VK_UP:
                 JetpackLabel.updateLocation(0);
                 break;
@@ -135,48 +176,28 @@ public class ThatApplication extends JFrame implements KeyListener{
 
     @Override
     public void keyReleased(KeyEvent ke) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    synchronized public void collision(Comet obs)
+    synchronized public void cometCollision(Comet obs)
     {
-//	if ( character.getBounds().intersects(obs.getBounds()) )
-//        {
-//            if(obs.isMovingLeft() || obs.isTwoSided()) {
-//                if(character.getWidth()+character.getCurX() > obs.getCurX() + 10) {
-//                    if(character.getCurY() < obs.getCurY()) {
-//                        while(character.getCurY() + character.getHeight() > obs.getCurY()){
-//                            character.updateLocation(3);
-//                        } 
-//                    }
-//                    else {
-//                        for (int i = 0; i < 3; i++) character.updateLocation(4);
-//                    }
-//                }
-//                else {
-//                    gameRunning = false;
-//                    contentpane.remove(character);
-//                    JOptionPane.showMessageDialog( new JFrame(), "You Died! Your score is " + score, "Game Ended", JOptionPane.INFORMATION_MESSAGE );
-//                }
-//            }
-//            if(!obs.isMovingLeft() || obs.isTwoSided()){
-//                if(character.getCurX()< obs.getCurX() + obs.getWidth() - 10) {
-//                    if(character.getCurY() < obs.getCurY()) {
-//                        while(character.getCurY() + character.getHeight() > obs.getCurY()){
-//                            character.updateLocation(3);
-//                        } 
-//                    }
-//                    else {
-//                        for (int i = 0; i < 3; i++) character.updateLocation(4);
-//                    }
-//                }
-//                else {
-//                    gameRun = false;
-//                    contentpane.remove(character);
-//                    JOptionPane.showMessageDialog( new JFrame(), "You Died! Your score is " + score, "Game Ended", JOptionPane.INFORMATION_MESSAGE );
-//                }
-//            }
-//	}
+	if ( JetpackLabel.getBounds().intersects(obs.getBounds()) )
+        {
+            gameRun = false;
+            contentpane.remove(JetpackLabel);
+            JOptionPane.showMessageDialog( new JFrame(), "Unfortunately, we will miss you! Your have collected " + coin + " coin", "Chicken Dinner", JOptionPane.INFORMATION_MESSAGE );                         
+            setVisible(false);
+        }
+    }
+    
+    synchronized public void coinCollision(Coin obs)
+    {
+	if ( !hit && JetpackLabel.getBounds().intersects(obs.getBounds()) )
+        {           
+            contentpane.remove(obs);   
+            coin++;
+            coinText.setText(Integer.toString(coin));
+            hit = true;
+        }
     }
 }
 
@@ -225,21 +246,43 @@ abstract class myJLabel extends JLabel {
 }
 
 class Comet extends myJLabel {
-    
+   
     private MyImageIcon cometLabel;
     
     public Comet(int level) {
         super();
         width = 200; height = 100;
-        curY = (int)(Math.random() * 750);
-        curX = 1350;
+        curY = (int)(Math.random() * 650);      
         cometLabel = new MyImageIcon("Resources/comet.png").resize(width, height);
+        curX = 1350;
+        setIcon(cometLabel);
         setHorizontalAlignment(JLabel.CENTER);
         setBounds(curX, curY, width, height);
     }
     
     public void updateLocation() {       
-        if(true)curX -= 20;    
+        curX -= 20;    
+        setLocation(curX, curY);
+    }
+}
+
+class Coin extends myJLabel {
+    
+    private MyImageIcon coinLabel;
+    
+    public Coin(int level) {
+        super();
+        width = 100; height = 100;
+        curY = (int)(Math.random() * 650);      
+        coinLabel = new MyImageIcon("Resources/coin.png").resize(width, height);
+        curX = 1350;
+        setIcon(coinLabel);
+        setHorizontalAlignment(JLabel.CENTER);
+        setBounds(curX, curY, width, height);
+    }
+    
+    public void updateLocation() {       
+        curX -= 20;    
         setLocation(curX, curY);
     }
 }

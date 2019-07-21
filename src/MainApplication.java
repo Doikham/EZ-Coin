@@ -42,7 +42,7 @@ public class MainApplication extends JFrame {
         drawpane = new JLabel();
         drawpane.setIcon(backgroundImg);
         logo = new MyImageIcon("Resources/coin.png").resize(275, 220);
-        logoLabel = new JLabel();//.resize(contentpane.getWidth(), contentpane.getHeight()));
+        logoLabel = new JLabel();
         logoLabel.setIcon(logo);
         logoLabel.setBounds(600,100,1100,400);
 
