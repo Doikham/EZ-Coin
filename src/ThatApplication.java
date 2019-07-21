@@ -22,6 +22,7 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
     private ArrayList <Comet> comets = new ArrayList<>();
     private ArrayList <Laser> lasers = new ArrayList<>();
 
+
     public ThatApplication(int level, String backgroundImg, String themeSound)
     {
         AddComponents(backgroundImg, themeSound);
@@ -167,9 +168,12 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
         Thread laserThread = new Thread() {
             public void run()
             {
+                int col;
                 int speed = 50;
+                int size;
                 lasers.add(new Laser(JetpackLabel.curX, JetpackLabel.curY));
-                Laser laser = lasers.get(lasers.size()-1) ;
+                size = lasers.size()-1;
+                Laser laser = lasers.get(size);
                 contentpane.add(laser);
                 repaint();
                 boolean done = false;
@@ -177,13 +181,18 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
                     laser.updateLocation();
                     for(int i = 0; i < comets.size();i++)
                     {
-                        laserCollision(laser,comets.get(i),i);
+                        col = laserCollision(laser,comets.get(i),i);
+                        if(col == 1)
+                        {
+                            done = true;
+                            break;
+                        }
                     }
                     if(laser.getCurX() > 1300) done = true;
                     try { Thread.sleep(speed); } 
                     catch (InterruptedException e) { e.printStackTrace(); }
                 }
-                lasers.remove(0);               
+                lasers.remove(size);
                 contentpane.remove(laser);
                 laserHit = false;
                 repaint();
@@ -222,7 +231,7 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
     
     synchronized public void cometCollision(Comet obs)
     {
-	if ( JetpackLabel.getBounds().intersects(obs.getBounds()) )
+	if ( JetpackLabel.getBounds().intersects(obs.getBounds()) && obs.getDeleted() == false )
         {
             gameRun = false;
             contentpane.remove(JetpackLabel);
@@ -244,7 +253,7 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
         }
     }
     
-    synchronized public void laserCollision(Laser obs, Comet comet, int a)
+    synchronized public int laserCollision(Laser obs, Comet comet, int a)
     {
 	if ( !laserHit && comet.getBounds().intersects(obs.getBounds()) )
         {
@@ -252,8 +261,13 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
             contentpane.remove(comet);
             comets.remove(a);
             contentpane.remove(obs);
+            comet.setDeleted(true);
             laserHit = true;
+            repaint();
+            validate();
+            return 1;
         }
+	return 0;
     }
 
     @Override
@@ -329,7 +343,7 @@ abstract class myJLabel extends JLabel {
 class Comet extends myJLabel {
    
     private MyImageIcon cometLabel;
-
+    private boolean deleted = false;
     
     public Comet(int level) {
         super();
@@ -346,6 +360,16 @@ class Comet extends myJLabel {
         curX -= 20;    
         setLocation(curX, curY);
     }
+
+    public void setDeleted(boolean f){
+        deleted = f;
+    }
+
+    public boolean getDeleted(){
+        return deleted;
+    }
+
+
 }
 
 class Coin extends myJLabel {
