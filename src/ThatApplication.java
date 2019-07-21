@@ -11,16 +11,15 @@ public class ThatApplication extends JFrame implements KeyListener{
     private JPanel              contentpane;
     private JLabel              drawpane;
     private MyLabel             JetpackLabel;
-    private JLabel              BossLabel;
     private JButton             startButton, closeButton, highscoreButton;
-    private JTextField          scoreText;
+    private JTextField          coinText;
     private int coin;
     private MySoundEffect       themeSound;
     private boolean gameRun =   true;
 
-    public ThatApplication(int level, String backgoundImg, String themeSound)
+    public ThatApplication(int level, String backgroundImg, String themeSound)
     {
-        AddComponents(backgoundImg, themeSound);
+        AddComponents(backgroundImg, themeSound);
         setGameThread(level);
         //setCoinThread();
         addKeyListener(this);
@@ -40,7 +39,7 @@ public class ThatApplication extends JFrame implements KeyListener{
 //        new forproject3credit();
     }
 
-    public void AddComponents(String backgoundImg, String themeSound)
+    public void AddComponents(String backgroundImg, String themeSound)
     {
         setTitle("EZ Coin Collector: Beware your step!");
         setBounds(100, 100, 1500, 800);
@@ -51,24 +50,29 @@ public class ThatApplication extends JFrame implements KeyListener{
         coin = 0;
         
         contentpane = (JPanel)getContentPane();
-        contentpane.setLayout(new BorderLayout());
         JOptionPane.showMessageDialog(new JFrame(), "Let's start!" , "Hello!",
                 JOptionPane.INFORMATION_MESSAGE );
         
-        MyImageIcon backgroundImg = new MyImageIcon("Resources/jetpack/bg2.jpg").resize(contentpane.getWidth(), contentpane.getHeight());
+        MyImageIcon background = new MyImageIcon(backgroundImg);
 
         drawpane = new JLabel();
-        drawpane.setIcon(backgroundImg);
+        drawpane.setIcon(background.resize(1500,800));
         drawpane.setLayout(null);
 
         JetpackLabel = new MyLabel();
         drawpane.add(JetpackLabel);
-        JetpackLabel.setFocusable(true);
-        JetpackLabel.requestFocus();
         addKeyListener(JetpackLabel);
-        repaint();
-
+        
+        JPanel control  = new JPanel();
+        control.setBounds(1050,0,150,30);
+        coinText = new JTextField("0", 5);		
+	coinText.setEditable(false);
+        control.add(new JLabel("Coin : "));
+        control.add(coinText);
+                
+        contentpane.add(control, BorderLayout.NORTH);
         contentpane.add(drawpane, BorderLayout.CENTER);
+        repaint();
         validate();
     }
 
@@ -94,11 +98,11 @@ public class ThatApplication extends JFrame implements KeyListener{
                 repaint();
                 boolean done = false;
                 while (!done && gameRun) { 
-                    comet.updateLocation();
-                    collision(comet);
-                    if(comet.getCurX() < -comet.getWidth() || comet.getCurX() > 1200) done = true;
-                    try { Thread.sleep(hard); } 
-                    catch (InterruptedException e) { e.printStackTrace(); }
+//                    comet.updateLocation();
+//                    collision(comet);
+//                    if(comet.getCurX() < -comet.getWidth() || comet.getCurX() > 1200) done = true;
+//                    try { Thread.sleep(hard); } 
+//                    catch (InterruptedException e) { e.printStackTrace(); }
                 }
                 contentpane.remove(comet);
                 repaint();
@@ -121,6 +125,47 @@ public class ThatApplication extends JFrame implements KeyListener{
     public void keyReleased(KeyEvent ke) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    synchronized public void collision(Comet obs)
+    {
+//	if ( character.getBounds().intersects(obs.getBounds()) )
+//        {
+//            if(obs.isMovingLeft() || obs.isTwoSided()) {
+//                if(character.getWidth()+character.getCurX() > obs.getCurX() + 10) {
+//                    if(character.getCurY() < obs.getCurY()) {
+//                        while(character.getCurY() + character.getHeight() > obs.getCurY()){
+//                            character.updateLocation(3);
+//                        } 
+//                    }
+//                    else {
+//                        for (int i = 0; i < 3; i++) character.updateLocation(4);
+//                    }
+//                }
+//                else {
+//                    gameRunning = false;
+//                    contentpane.remove(character);
+//                    JOptionPane.showMessageDialog( new JFrame(), "You Died! Your score is " + score, "Game Ended", JOptionPane.INFORMATION_MESSAGE );
+//                }
+//            }
+//            if(!obs.isMovingLeft() || obs.isTwoSided()){
+//                if(character.getCurX()< obs.getCurX() + obs.getWidth() - 10) {
+//                    if(character.getCurY() < obs.getCurY()) {
+//                        while(character.getCurY() + character.getHeight() > obs.getCurY()){
+//                            character.updateLocation(3);
+//                        } 
+//                    }
+//                    else {
+//                        for (int i = 0; i < 3; i++) character.updateLocation(4);
+//                    }
+//                }
+//                else {
+//                    gameRun = false;
+//                    contentpane.remove(character);
+//                    JOptionPane.showMessageDialog( new JFrame(), "You Died! Your score is " + score, "Game Ended", JOptionPane.INFORMATION_MESSAGE );
+//                }
+//            }
+//	}
+    }
 }
 
 class MyLabel extends JLabel implements KeyListener
@@ -129,7 +174,6 @@ class MyLabel extends JLabel implements KeyListener
     private MyImageIcon   HeroImage;
     private int HeroWidth = 250, HeroHeight = 200;
     private int HerocurX  = 90, HerocurY = 400;
-    private shareInt receive;
 
     public MyLabel()
     {
@@ -153,8 +197,8 @@ class MyLabel extends JLabel implements KeyListener
                 else HerocurY = 0;
                 break;
             case KeyEvent.VK_DOWN:
-                if (HerocurY < (int)receive.height-HeroHeight-30) HerocurY += 20;
-                else HerocurY = (int)receive.height-HeroHeight-30;
+                //if (HerocurY < (int)receive.height-HeroHeight-30) HerocurY += 20;
+                //else HerocurY = (int)receive.height-HeroHeight-30;
                 break;
             default: break;
         }
@@ -171,13 +215,23 @@ class MyLabel extends JLabel implements KeyListener
     }
 }
 
-class Obstacle extends customJLabel {
+abstract class customJLabel extends JLabel {
+    protected int curX, curY;
+    protected int width, height;
+    protected MyImageIcon labelL, labelR;
+    
+    public customJLabel() { }
+    public int getCurX(){ return curX; }
+    public int getCurY(){ return curY; }
+}
+
+class Comet extends customJLabel {
     
     private boolean movingLeft;
     private boolean twoSide = false;
     private MyImageIcon labelB;
     
-    public Obstacle(int level) {
+    public Comet(int level) {
         super();
         width = 800; height = 40;
         curY = (int)(Math.random() * 900);
