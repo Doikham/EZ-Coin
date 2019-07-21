@@ -113,21 +113,21 @@ public class SettingApplication extends JFrame {
             public void itemStateChanged(ItemEvent e) {
                 switch (backgroundBox.getSelectedIndex()) {
                     case 0:
-                        bg = "/Resources/bg2.jpg";
+                        bg = "Resources/bg2.jpg";
 //                        bgIcon = new MyImageIcon("bg1.png").resize(bgimgsizeW, bgimgsizeH);
 //                        DisplayBgIcon.setIcon(bgIcon);
                         break;
                     case 1:
-                        bg = "/Resources/bg_muic.jpg";                       
+                        bg = "Resources/bg_muic.jpg";                       
                         break;
                     case 2:
-                        bg = "/Resources/bg_earth.jpg";
+                        bg = "Resources/bg_earth.jpg";
                         break;
                     case 3:
-                        bg = "/Resources/bg_rick.jpg";
+                        bg = "Resources/bg_rick.jpg";
                         break;
                     case 4:
-                        bg = "/Resources/bg_rm.jpg";
+                        bg = "Resources/bg_rm.jpg";
                         break;                  
                     default: {
                     }
@@ -163,7 +163,7 @@ public class SettingApplication extends JFrame {
 //                            charTextField2.setText("to Nong Kye?!?!?!");
                             break;
                         case 1:
-                            sound = "resources/Panjabi MC.wav";
+                            sound = "Resources/Panjabi MC.wav";
                             break;
                         case 2:
                             sound = "Resources/Star Wars.wav";
