@@ -177,7 +177,7 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
                     laser.updateLocation();
                     for(int i = 0; i < comets.size();i++)
                     {
-                        laserCollision(laser,comets.get(i));
+                        laserCollision(laser,comets.get(i),i);
                     }
                     if(laser.getCurX() > 1300) done = true;
                     try { Thread.sleep(speed); } 
@@ -244,12 +244,13 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
         }
     }
     
-    synchronized public void laserCollision(Laser obs, Comet comet)
+    synchronized public void laserCollision(Laser obs, Comet comet, int a)
     {
 	if ( !laserHit && comet.getBounds().intersects(obs.getBounds()) )
         {
             explosionSound.playOnce();
             contentpane.remove(comet);
+            comets.remove(a);
             contentpane.remove(obs);
             laserHit = true;
         }
