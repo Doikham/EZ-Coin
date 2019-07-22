@@ -9,12 +9,13 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ThatApplication extends JFrame implements KeyListener, MouseListener{
     private JLabel                  contentpane;
     private MyLabel                 JetpackLabel;
     private JButton                 startButton, closeButton, highscoreButton;
-    private JTextField              coinText;
+    private JTextField              coinText, laserText;
     private int coin;
     private MySoundEffect           themeSoundThat, coinCollect, laserSound, explosionSound;
     private boolean gameRun =       true;
@@ -24,6 +25,8 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
     private int count = 0;
     private boolean holding;
     private MyImageIcon             explosionImg;
+    private Date                    pressedTime;
+    private long                    timeClicked;
 
     public ThatApplication(int level, String backgroundImg, String themeSound)
     {
@@ -35,6 +38,9 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
             @Override
             public void windowClosing(WindowEvent e) {
                 themeSoundThat.stop();
+                gameRun = false;
+                contentpane.remove(JetpackLabel);
+                JOptionPane.showMessageDialog(new JFrame(),"We will miss you! Your have collected " +coin+" coins","Good Bye",JOptionPane.INFORMATION_MESSAGE );
             }
         });
         while(gameRun) {
@@ -82,11 +88,16 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
         contentpane.add(JetpackLabel);
         
         JPanel control  = new JPanel();
-        control.setBounds(1150,0,150,30);
+        control.setBounds(1100,0,150,30);
         coinText = new JTextField("0", 5);		
 	coinText.setEditable(false);
         control.add(new JLabel("Coin : "));
         control.add(coinText);
+        
+//        laserText = new JTextField("0", 5);		
+//	laserText.setEditable(false);
+//        control.add(new JLabel("Laser : "));
+//        control.add(laserText);
                 
         contentpane.add(control, BorderLayout.NORTH);
         
@@ -240,9 +251,22 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
         {
             gameRun = false;
             contentpane.remove(JetpackLabel);
+            JDialog.setDefaultLookAndFeelDecorated(true);
             JOptionPane.showMessageDialog( new JFrame(), "Unfortunately, we will miss you! Your have collected " + coin + " coin", "Chicken Dinner", JOptionPane.INFORMATION_MESSAGE );                         
-            setVisible(false);
-            System.exit(-1);
+            int response = JOptionPane.showConfirmDialog(null, "Play Again?", "We need you!",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.NO_OPTION) {
+                setVisible(false);
+                System.exit(0);
+            } 
+            else if (response == JOptionPane.YES_OPTION) {
+                setVisible(false);
+                new MainApplication();
+            } 
+            else if (response == JOptionPane.CLOSED_OPTION) {
+                setVisible(false);
+                System.exit(0);
+            }
         }
     }
     
@@ -281,14 +305,22 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
     }
 
     @Override
-    public void mousePressed(MouseEvent me) {                    
+    public void mousePressed(MouseEvent me) {       
+        pressedTime = new Date();
+//        timeClicked = new Date().getTime() - pressedTime.getTime();
+//        if(timeClicked >= 1500){
+//            laserText.setText("Ready");
+//        }       
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        laserSound.playOnce();
-        createLaser();
-        repaint();      
+        timeClicked = new Date().getTime() - pressedTime.getTime();
+        if(timeClicked >= 500){
+            laserSound.playOnce();
+            createLaser();
+            repaint();   
+        }
     }
 
     @Override
