@@ -30,7 +30,6 @@ public class MainApplication extends JFrame {
         });
 
         contentpane = (JPanel) getContentPane();
-        //contentpane.setLayout(new BoxLayout(contentpane, BoxLayout.Y_AXIS));
         AddComponents();
     }
 

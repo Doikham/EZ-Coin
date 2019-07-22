@@ -251,6 +251,7 @@ public class SettingApplication extends JFrame {
             }
         });
 
+        //Credits
         by = new JLabel("Made by:");
         by.setBounds(1100,390,300,100);
         by.setFont(new Font(by.getFont().getName(), by.getFont().getStyle(), 40));

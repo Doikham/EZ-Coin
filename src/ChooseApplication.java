@@ -18,7 +18,6 @@ public class ChooseApplication extends  JFrame implements PropertyChangeListener
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         contentpane = (JPanel) getContentPane();
-        //contentpane.setLayout( new GridLayout(2,1) );
         AddComponents();
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -35,7 +34,7 @@ public class ChooseApplication extends  JFrame implements PropertyChangeListener
         drawpane.setIcon(backgroundImg);
 
         logo = new MyImageIcon("Resources/coin.png").resize(275, 220);
-        logoLabel = new JLabel();//.resize(contentpane.getWidth(), contentpane.getHeight()));
+        logoLabel = new JLabel();
         logoLabel.setIcon(logo);
         logoLabel.setBounds(600,100,1100,400);
 

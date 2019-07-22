@@ -22,7 +22,6 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
     private boolean hit, laserHit = false;
     private ArrayList <Comet> comets = new ArrayList<>();
     private ArrayList <Laser> lasers = new ArrayList<>();
-    private int count = 0;
     private boolean holding;
     private MyImageIcon             explosionImg;
     private Date                    pressedTime;
@@ -93,15 +92,9 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
 	coinText.setEditable(false);
         control.add(new JLabel("Coin : "));
         control.add(coinText);
-        
-//        laserText = new JTextField("0", 5);		
-//	laserText.setEditable(false);
-//        control.add(new JLabel("Laser : "));
-//        control.add(laserText);
-                
+
         contentpane.add(control, BorderLayout.NORTH);
-        
-        //repaint();
+
         validate();
     }
 
@@ -136,7 +129,6 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
                     try { Thread.sleep(speed); } 
                     catch (InterruptedException e) { e.printStackTrace(); }
                 }
-                //comets.remove(size);
                 contentpane.remove(comet);
                 repaint();
             }
@@ -307,16 +299,12 @@ public class ThatApplication extends JFrame implements KeyListener, MouseListene
     @Override
     public void mousePressed(MouseEvent me) {       
         pressedTime = new Date();
-//        timeClicked = new Date().getTime() - pressedTime.getTime();
-//        if(timeClicked >= 1500){
-//            laserText.setText("Ready");
-//        }       
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
         timeClicked = new Date().getTime() - pressedTime.getTime();
-        if(timeClicked >= 500){
+        if(timeClicked >= 400){
             laserSound.playOnce();
             createLaser();
             repaint();   
@@ -440,7 +428,6 @@ class Laser extends myJLabel {
         laserLabel = new MyImageIcon("Resources/laser.png").resize(width, height);
         curX = x;
         setIcon(laserLabel);
-        //setHorizontalAlignment(JLabel.CENTER);
         setBounds(curX, curY, width, height);
     }
     
