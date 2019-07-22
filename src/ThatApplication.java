@@ -14,7 +14,6 @@ import java.util.Date;
 public class ThatApplication extends JFrame implements KeyListener, MouseListener{
     private JLabel                  contentpane;
     private MyLabel                 JetpackLabel;
-    private JButton                 startButton, closeButton, highscoreButton;
     private JTextField              coinText, laserText;
     private int coin;
     private MySoundEffect           themeSoundThat, coinCollect, laserSound, explosionSound;
